@@ -122,8 +122,8 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
     d_loss = d_loss_real + d_loss_fake"""
 
      # get loss for discriminator
-    d_loss_real = tf.reduce_mean(D)
-    d_loss_fake = -tf.reduce_mean(D_)
+    d_loss_real = tf.reduce_mean(D_logits)
+    d_loss_fake = -tf.reduce_mean(D_logits_)
 
     d_loss = d_loss_real + d_loss_fake
     # get loss for generator
@@ -181,11 +181,11 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
                 .minimize(d_loss, var_list=d_vars)
 
         extra_update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
-        g_optimizer = tf.train.RMSPropOptimizer(learning_rate = learning_rate)
-        """
+        g_optimizer = tf.train.RMSPropOptimizer(learning_rate = learning_rate)        
         with tf.control_dependencies(extra_update_ops):
             g_optim = g_optimizer.minimize(g_loss, var_list=g_vars)
-        
+        """
+
         try:
           tf.global_variables_initializer().run()
         except:
