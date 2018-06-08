@@ -122,12 +122,12 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
     d_loss = d_loss_real + d_loss_fake"""
 
      # get loss for discriminator
-    d_loss_real = tf.reduce_mean(D_logits)
-    d_loss_fake = -tf.reduce_mean(D_logits_)
+    d_loss_real = tf.reduce_mean(tf.scalar_mul(-1,D_logits))
+    d_loss_fake = tf.reduce_mean(D_logits_)
 
     d_loss = d_loss_real + d_loss_fake
     # get loss for generator
-    g_loss = d_loss_fake
+    g_loss = tf.reduce_mean(tf.scalar_mul(-1,D_logits_))
 
     d_loss_real_sum = tf.summary.scalar("d_loss_real", d_loss_real)
     d_loss_fake_sum = tf.summary.scalar("d_loss_fake", d_loss_fake)
