@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TensorFlowTest", "TensorFlowTest\TensorFlowTest.csproj", "{277E9630-169B-48F0-BA79-C348C0CBC1CD}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DCGANTest", "DCGANTest\DCGANTest.pyproj", "{100A3B2F-64EC-46F9-86B8-6AF04B32F0FA}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "AnimeImgGen", "AnimeImgGen\AnimeImgGen.pyproj", "{2B0CA256-C780-4301-B114-5AD12AA4AAC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePrepare", "ImagePrepare\ImagePrepare.csproj", "{537E5770-1500-4065-B257-904619BD0C97}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{277E9630-169B-48F0-BA79-C348C0CBC1CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{277E9630-169B-48F0-BA79-C348C0CBC1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{277E9630-169B-48F0-BA79-C348C0CBC1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{277E9630-169B-48F0-BA79-C348C0CBC1CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{100A3B2F-64EC-46F9-86B8-6AF04B32F0FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{100A3B2F-64EC-46F9-86B8-6AF04B32F0FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B0CA256-C780-4301-B114-5AD12AA4AAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B0CA256-C780-4301-B114-5AD12AA4AAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537E5770-1500-4065-B257-904619BD0C97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537E5770-1500-4065-B257-904619BD0C97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537E5770-1500-4065-B257-904619BD0C97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537E5770-1500-4065-B257-904619BD0C97}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4D6AFC4B-B379-43A7-AE64-93A6E6C89D9A}
+	EndGlobalSection
+EndGlobal

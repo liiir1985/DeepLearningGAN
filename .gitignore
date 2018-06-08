@@ -1,0 +1,11 @@
+
+.vs
+*.png
+*.jpg
+
+obj
+bin
+
+packages
+
+__pycache__
