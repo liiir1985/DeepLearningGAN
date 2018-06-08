@@ -165,20 +165,24 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
     
     if(training):
         """ ADAM Optimizer
+        """
         d_optim = tf.train.AdamOptimizer(learning_rate_d, beta1=beta1) \
               .minimize(d_loss, var_list=d_vars)
+
 
         extra_update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
         g_optimizer = tf.train.AdamOptimizer(learning_rate, beta1=beta1)
         with tf.control_dependencies(extra_update_ops):
             g_optim = g_optimizer.minimize(g_loss, var_list=g_vars)
-        """
+        
 
-        d_optim = tf.train.RMSPropOptimizer(learning_rate = 5e-5) \
+        """
+        d_optim = tf.train.RMSPropOptimizer(learning_rate = learning_rate) \
                 .minimize(d_loss, var_list=d_vars)
 
         extra_update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
-        g_optimizer = tf.train.RMSPropOptimizer(learning_rate = 5e-5)
+        g_optimizer = tf.train.RMSPropOptimizer(learning_rate = learning_rate)
+        """
         with tf.control_dependencies(extra_update_ops):
             g_optim = g_optimizer.minimize(g_loss, var_list=g_vars)
         
