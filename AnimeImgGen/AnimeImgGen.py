@@ -166,11 +166,13 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
     if(training):
         """ ADAM Optimizer
         """
-        d_optim = tf.train.AdamOptimizer(learning_rate_d, beta1=beta1) \
-              .minimize(d_loss, var_list=d_vars)
-
-
         extra_update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        
+        d_optimizer = tf.train.AdamOptimizer(learning_rate_d, beta1=beta1)
+        with tf.control_dependencies(extra_update_ops):
+            d_optim = d_optimizer.minimize(d_loss, var_list=d_vars)
+
+
         g_optimizer = tf.train.AdamOptimizer(learning_rate, beta1=beta1)
         with tf.control_dependencies(extra_update_ops):
             g_optim = g_optimizer.minimize(g_loss, var_list=g_vars)
