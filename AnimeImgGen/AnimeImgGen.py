@@ -9,16 +9,16 @@ from six.moves import xrange
 import numpy as np
 from utils import show_all_variables, get_image, save_images
 
-batch_size = 64
-learning_rate = 0.00015
+batch_size = 16
+learning_rate = 0.0005
 learning_rate_d = 0.00015
 
 beta1 = 0.5
-epochs = 100
+epochs = 200
 train_size = np.inf
 
 # WGAN_GP parameter
-lambd = 0.25       # The higher value, the more stable, but the slower convergence
+lambd = 0.3      # The higher value, the more stable, but the slower convergence
 disc_iters = 5
 
 input_fname_pattern='*.jpg'
@@ -40,14 +40,14 @@ def generator(z, output_width, output_height, training, reuse = None):
         g_z_ = tf.layers.dense(z, gf_dim*8*s_h16*s_w16, activation = tf.nn.relu,kernel_initializer=tf.random_normal_initializer(stddev=0.02), reuse = reuse, name='g_z_')
         g_h0 = tf.reshape(
                 g_z_, [-1, s_h16, s_w16, gf_dim * 8])
-        g_h0 = tf.layers.batch_normalization(g_h0, training = training, reuse = reuse, name='g_h0')
+        #g_h0 = tf.layers.batch_normalization(g_h0, training = training, reuse = reuse, renorm=True, name='g_h0')
 
         g_h1 = tf.layers.batch_normalization(
-                    tf.layers.conv2d_transpose(g_h0, gf_dim * 4, 5, 2, padding='same', activation= tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name='g_h1/deconv2d'), training = training, reuse = reuse, name='g_h1/bn')
+                    tf.layers.conv2d_transpose(g_h0, gf_dim * 4, 5, 2, padding='same', activation= tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name='g_h1/deconv2d'), training = training, reuse = reuse, renorm=True, name='g_h1/bn')
         g_h2 = tf.layers.batch_normalization(
-                    tf.layers.conv2d_transpose(g_h1, gf_dim * 2, 5, 2, padding='same', activation= tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name='g_h2/deconv2d'), training = training, reuse = reuse, name='g_h2/bn')
+                    tf.layers.conv2d_transpose(g_h1, gf_dim * 2, 5, 2, padding='same', activation= tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name='g_h2/deconv2d'), training = training, reuse = reuse, renorm=True, name='g_h2/bn')
         g_h3 = tf.layers.batch_normalization(
-                    tf.layers.conv2d_transpose(g_h2, gf_dim, 5, 2, padding='same', activation= tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name='g_h3/deconv2d'), training = training, reuse = reuse, name='g_h3/bn')
+                    tf.layers.conv2d_transpose(g_h2, gf_dim, 5, 2, padding='same', activation= tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name='g_h3/deconv2d'), training = training, reuse = reuse, renorm=True, name='g_h3/bn')
         g_h4 = tf.layers.conv2d_transpose(g_h3, 3, 5, 2, padding='same', activation= tf.nn.tanh, kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name='g_h4/deconv2d')
 
     return g_h4
@@ -56,13 +56,13 @@ def discriminator(image, training, reuse = None):
     df_dim = 64
     tf
     d_h0 = tf.layers.batch_normalization(
-                    tf.layers.conv2d(image, df_dim, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h0'), training = training, reuse = reuse, name='d_h0/bn')
+                    tf.layers.conv2d(image, df_dim, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h0'), training = training, reuse = reuse, renorm=True, name='d_h0/bn')
     d_h1 = tf.layers.batch_normalization(
-                    tf.layers.conv2d(d_h0, df_dim * 2, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h1/conv2d'), training = training, reuse = reuse, name='d_h1/bn')
+                    tf.layers.conv2d(d_h0, df_dim * 2, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h1/conv2d'), training = training, reuse = reuse, renorm=True, name='d_h1/bn')
     d_h2 = tf.layers.batch_normalization(
-                    tf.layers.conv2d(d_h1, df_dim * 4, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h2/conv2d'), training = training, reuse = reuse, name='d_h2/bn')
+                    tf.layers.conv2d(d_h1, df_dim * 4, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h2/conv2d'), training = training, reuse = reuse, renorm=True, name='d_h2/bn')
     d_h3 = tf.layers.batch_normalization(
-                    tf.layers.conv2d(d_h2, df_dim * 8, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h3/conv2d'), training = training, reuse = reuse, name='d_h3/bn')
+                    tf.layers.conv2d(d_h2, df_dim * 8, 5, 2, padding='same', activation = tf.nn.leaky_relu,kernel_initializer=tf.truncated_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h3/conv2d'), training = training, reuse = reuse, renorm=True, name='d_h3/bn')
 
     d_h4 = tf.layers.dense(tf.reshape(d_h3, [-1,4*4*512]),1,kernel_initializer=tf.random_normal_initializer(stddev=0.02), reuse = reuse, name = 'd_h4/fc')
 
@@ -134,7 +134,7 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
     
     """ Gradient Penalty """
     # This is borrowed from https://github.com/kodalinaveen3/DRAGAN/blob/master/DRAGAN.ipynb
-    """
+    
     alpha = tf.random_uniform( [batch_size] + image_dims, minval=0.,maxval=1.)
     differences = G - inputs # This is different from MAGAN
     interpolates = inputs + (alpha * differences)
@@ -143,7 +143,7 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
     slopes = tf.sqrt(tf.reduce_sum(tf.square(gradients), reduction_indices=[1]))
     gradient_penalty = tf.reduce_mean((slopes - 1.) ** 2)
     d_loss += lambd * gradient_penalty
-    """
+    
 
     g_loss_sum = tf.summary.scalar("g_loss", g_loss)
     d_loss_sum = tf.summary.scalar("d_loss", d_loss)
@@ -154,7 +154,7 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
     g_vars = [var for var in t_vars if 'g_' in var.name]
 
     # Clip D's variables ----WGAN
-    clip_D = [p.assign(tf.clip_by_value(p, -0.01, 0.01)) for p in d_vars]
+    # clip_D = [p.assign(tf.clip_by_value(p, -0.01, 0.01)) for p in d_vars]
 
 
     saver = tf.train.Saver()
@@ -234,7 +234,7 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
 
                 for counter_d in xrange(0, disc_iters):                
                     # Update D network
-                    _, summary_str, _ = sess.run([d_optim, d_sum, clip_D],
+                    _, summary_str = sess.run([d_optim, d_sum],
                         feed_dict={ inputs: batch_images, z: batch_z})
                     writer.add_summary(summary_str, counter)
                 
@@ -267,7 +267,7 @@ def run(sess, training = True, z_dim = 100, image_dims=[64,64,3]):
                             inputs: sample_inputs,
                         },
                       )
-                      save_images(samples, (8,8), './{}/train_{:02d}_{:04d}_{:08d}.png'.format('samples', epoch, idx, counter))
+                      save_images(samples, (4, 4), './{}/train_{:02d}_{:04d}_{:08d}.png'.format('samples', epoch, idx, counter))
                       print("[Sample] d_loss: %.8f, g_loss: %.8f" % (d_loss_, g_loss_)) 
                     except:
                         e = sys.exc_info()[0]
